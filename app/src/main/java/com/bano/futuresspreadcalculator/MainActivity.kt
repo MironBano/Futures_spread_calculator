@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 val daysToExpire = calculateDaysUntil(binding.editText4.text.toString())
                 val kcRateToCalc = kcRate / 100
 
-                val activPriceNoDiv: Double = activPrice - dividend
+                val activPriceNoDiv: Double = activPrice - dividend * 0.87
                 binding.textView1.text = "Актив без дивиденда:\n$activPriceNoDiv"
 
                 val futureCalculated: Double =
@@ -98,11 +98,20 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         kcRate = sharedPreferences.getFloat(KEY_KC_RATE, 21.0f).toDouble()
         binding.KCTV.text = "КС: $kcRate%"
-        binding.textView1.text = sharedPreferences.getString(KEY_ACTIV_PRICE_NO_DIV, "Актив без дивиденда:\n0") ?: "Актив без дивиденда:\n0"
-        binding.textView2.text = sharedPreferences.getString(KEY_FUTURE_PRICE, "Рассчетная цена фьючерса:\n0") ?: "Рассчетная цена фьючерса:\n0"
-        binding.textView3.text = sharedPreferences.getString(KEY_BACK_FUTURE, "Обратный рассчет:\n0") ?: "Обратный рассчет:\n0"
-        binding.textView4.text = sharedPreferences.getString(KEY_DEVIATION, "Отклонение:\n0") ?: "Отклонение:\n0"
-        binding.textView5.text = sharedPreferences.getString(KEY_CONDITION, "Контанго/бэквардация:\n0") ?: "Контанго/бэквардация:\n0"
+        binding.textView1.text =
+            sharedPreferences.getString(KEY_ACTIV_PRICE_NO_DIV, "Актив без дивиденда:\n0")
+                ?: "Актив без дивиденда:\n0"
+        binding.textView2.text =
+            sharedPreferences.getString(KEY_FUTURE_PRICE, "Рассчетная цена фьючерса:\n0")
+                ?: "Рассчетная цена фьючерса:\n0"
+        binding.textView3.text =
+            sharedPreferences.getString(KEY_BACK_FUTURE, "Обратный рассчет:\n0")
+                ?: "Обратный рассчет:\n0"
+        binding.textView4.text =
+            sharedPreferences.getString(KEY_DEVIATION, "Отклонение:\n0") ?: "Отклонение:\n0"
+        binding.textView5.text =
+            sharedPreferences.getString(KEY_CONDITION, "Контанго/бэквардация:\n0")
+                ?: "Контанго/бэквардация:\n0"
     }
 
     private fun calculateBackFuture(
