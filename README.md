@@ -4,4 +4,5 @@
 
 APK для установки - [https://github.com/MironBano/Futures_spread_calculator/blob/master/app-debug.apk](https://github.com/MironBano/Futures_spread_calculator/blob/master/FuturesCalculator.apk)
 
-![screen](https://github.com/user-attachments/assets/e2ce5709-f2ea-4c46-acb4-d69a7c3d917a)
+
+![screen](https://github.com/user-attachments/assets/8effc0b9-f2ca-4693-9f54-7ab677528cae)
