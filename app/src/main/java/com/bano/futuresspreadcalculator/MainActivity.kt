@@ -10,15 +10,12 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_SHORT
 import androidx.appcompat.app.AppCompatActivity
 import com.bano.futuresspreadcalculator.databinding.ActivityMainBinding
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var kcRate: Double = 21.0
     private var KCstep: Double = 1.0
+    val calculator = Calculator()
 
     private val PREFS_NAME = "MyAppPrefs"
     private val KEY_KC_RATE = "kc_rate"
@@ -55,19 +52,19 @@ class MainActivity : AppCompatActivity() {
                 val activPrice = binding.editText1.text.toString().toDouble()
                 val futurePrice = binding.editText2.text.toString().toDouble()
                 val dividend = binding.editText3.text.toString().toDouble()
-                val daysToExpire = calculateDaysUntil(binding.editText4.text.toString())
+                val daysToExpire = calculator.calculateDaysUntil(binding.editText4.text.toString())
                 val kcRateToCalc = kcRate / 100
 
-                val activPriceNoDiv: Double = activPrice - dividend * 0.87
+                val activPriceNoDiv: Double = calculator.calculateActivPriceNoDiv(activPrice, dividend)
                 binding.textView1.text = "Актив без дивиденда:\n$activPriceNoDiv"
 
                 val futureCalculated: Double =
-                    calculateFuture(activPriceNoDiv, kcRateToCalc, daysToExpire)
+                    calculator.calculateFuture(activPriceNoDiv, kcRateToCalc, daysToExpire)
                 binding.textView2.text =
                     "Рассчетная цена фьючерса:\n${"%.2f".format(futureCalculated)}"
 
                 val backFutureCalculated: Double =
-                    calculateBackFuture(futurePrice, dividend, kcRateToCalc, daysToExpire)
+                    calculator.calculateBackFuture(futurePrice, dividend, kcRateToCalc, daysToExpire)
                 binding.textView3.text = "Обратный рассчет:\n${"%.2f".format(backFutureCalculated)}"
 
                 val deviation = backFutureCalculated - activPriceNoDiv
@@ -79,6 +76,7 @@ class MainActivity : AppCompatActivity() {
             } else Toast.makeText(this, "Введите все данные", LENGTH_SHORT).show()
         }
     }
+
 
     private fun saveData() {
         val sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
@@ -114,14 +112,6 @@ class MainActivity : AppCompatActivity() {
                 ?: "Контанго/бэквардация:\n0"
     }
 
-    private fun calculateBackFuture(
-        futurePrice: Double, dividend: Double, kcRateToCalc: Double, daysToExpire: Long
-    ) = (futurePrice + dividend * 0.87) / (1 + kcRateToCalc * (daysToExpire.toDouble() / 365))
-
-    private fun calculateFuture(
-        activPriceNoDiv: Double, kcRateToCalc: Double, daysToExpire: Long
-    ) = activPriceNoDiv * (1 + kcRateToCalc * (daysToExpire.toDouble() / 365))
-
     @SuppressLint("SetTextI18n")
     private fun displayMarketCondition(futureCalculated: Double, futurePrice: Double) {
         val bkValue = futurePrice - futureCalculated
@@ -129,23 +119,6 @@ class MainActivity : AppCompatActivity() {
         val percentOfDeviation = "%.2f".format((bkValue / futureCalculated) * 100)
 
         binding.textView5.text = "$condition: ${"%.2f".format(bkValue)} \n$percentOfDeviation%"
-    }
-
-    private fun calculateDaysUntil(inputDate: String): Long {
-        val dateFormat = SimpleDateFormat("dd.MM.yy", Locale.getDefault())
-
-        return try {
-            val targetDate: Date = dateFormat.parse(inputDate)
-                ?: throw IllegalArgumentException("Неправильный формат даты")
-
-            val currentDate = Date()
-            val differenceInMillis = targetDate.time - currentDate.time
-            TimeUnit.DAYS.convert(differenceInMillis, TimeUnit.MILLISECONDS) + 1
-
-        } catch (e: Exception) {
-            Toast.makeText(this, "Ошибка: ${e.message}", LENGTH_SHORT).show()
-            -1
-        }
     }
 
     private fun isInputsValid(): Boolean {
