@@ -4,12 +4,13 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class CalculatorTest {
+    private val calculator = Calculator()
+
     @Test
     fun calculateActivPriceNoDiv_isCorrect() {
         val activ = 1000.0
         val dividendTrue = 100.0
         val dividendFalse = 0.0
-        val calculator = Calculator()
 
         assertEquals(1000.0, calculator.calculateActivPriceNoDiv(activ, dividendFalse), 0.0)
         assertEquals(913.0, calculator.calculateActivPriceNoDiv(activ, dividendTrue), 0.0)
@@ -20,7 +21,6 @@ class CalculatorTest {
         val activPriceNoDiv1 = 1000.0
         val kcRate1 = 0.21
         val daysToExpire1 = 31L
-        val calculator = Calculator()
 
         val activPriceNoDiv2 = 10000.0
         val kcRate2 = 0.2
@@ -36,7 +36,6 @@ class CalculatorTest {
         val div = 100.0
         val kcRate = 0.21
         val daysToExpire = 31L
-        val calculator = Calculator()
 
         assertEquals( 1067.95, calculator.calculateBackFuture(futurePrice, div, kcRate, daysToExpire), 0.005)
     }
